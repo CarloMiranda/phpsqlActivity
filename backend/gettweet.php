@@ -2,13 +2,13 @@
 
 include "config.php";
 
-$sql = "SELECT * FROM posts JOIN users ON users.id = posts.user_id ORDER BY posts.id DESC";
+$sql = "SELECT * FROM tweets JOIN users ON users.id = tweets.user_id ORDER BY tweets.id DESC";
 
 $results = $conn->query($sql);
 
 if($results->num_rows > 0){
 
-    $posts = array();
+    $tweets = array();
 
     while($row = $results->fetch_assoc()){
         $todo = array(
@@ -16,16 +16,17 @@ if($results->num_rows > 0){
             'content' => $row['content'],
             'firstname' => $row['firstname'],
             'lastname' => $row['lastname'],
+            'date_tweeted' => $row['date_tweeted'],
         );
-        $posts[] = $todo;
+        $tweets[] = $todo;
     }
 
-    $json = json_encode($posts);
+    $json = json_encode($tweets);
     header('Content-Type: application/json');
     echo $json;
 
 }else{
-    echo "No posts found.";
+    echo "No tweets found.";
 }
 
 ?>

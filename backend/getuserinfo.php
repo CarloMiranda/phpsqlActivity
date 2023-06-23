@@ -3,7 +3,7 @@ include "config.php";
 
 $id = $_GET['id'];
 // Retrieve user information from the database
-$sql = "SELECT email, firstname, lastname, birthdate FROM users WHERE id = '$id'"; // Replace <condition> with appropriate condition for the user
+$sql = "SELECT email, firstname, lastname, birthdate FROM users WHERE id = '$id'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {

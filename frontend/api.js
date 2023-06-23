@@ -13,6 +13,11 @@ function getUser() {
     .then((data) => {
       document.querySelector("#name").innerHTML =
         data.user.firstname + " " + data.user.lastname;
+        document.querySelector("#emailInfo").innerHTML = 
+        data.user.email;
+        document.querySelector("#bdateInfo").innerHTML = 
+        data.user.birthdate;
+
       console.log(data);
     });
 }
@@ -61,7 +66,7 @@ editForm.addEventListener("submit", updateProfile);
 
 // Post Functions
 function newPost() {
-  const postContent = document.querySelector("#newpost").value;
+  const tweetsContent = document.querySelector("#newpost").value;
   const dateTweeted = new Date().toISOString(); // Get the current date and time in ISO format
   fetch(endpoint + "createtweets.php", {
     method: "POST",
@@ -69,7 +74,7 @@ function newPost() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      content: postContent,
+      content: tweetsContent,
       date_tweeted: dateTweeted,
       user_id: getCookie("user_id"),
     }),
@@ -77,19 +82,20 @@ function newPost() {
     .then((response) => response.json())
     .then((data) => {
       document.querySelector("#newpost").value = "";
+      console.log(data);
       getPosts();
     });
 }
 
 
-function deleteTweet(tweetId) {
-  fetch(endpoint + "deletetweet.php", {
+function deleteTweet(userId) {
+  fetch(endpoint + "deletetweets.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      tweet_id: tweetId,
+      user_id: userId,
     }),
   })
     .then((response) => response.json())
@@ -104,19 +110,22 @@ function getPosts() {
   fetch(endpoint + "gettweet.php")
     .then((response) => response.json())
     .then((data) => {
-      let postHTML = "";
-      data.forEach((post) => {
-        postHTML += `
+      let tweetsHTML = "";
+      data.forEach((tweets) => {
+        tweetsHTML += `
             <div class="card mt-4">
               <div class="card-body">
-                <p class="fw-bold">${post.firstname} ${post.lastname}<span>${post.date_tweeted}</p>
-                <p>${post.content}</p>
-                <button class="btn btn-danger" onclick="deleteTweet(${post.tweet_id})">Delete</button>
+                <div>
+                  <p class="fw-bold">${tweets.firstname} ${tweets.lastname}</p>
+                  <p>${tweets.date_tweeted}</p>
+                </div>
+                <p>${tweets.content}</p>
+                <button class="btn btn-danger" onclick="deleteTweet(${tweets.user_id})">Delete</button>
               </div>
             </div>
             `;
       });
-      document.querySelector("#newsfeed").innerHTML = postHTML;
+      document.querySelector("#newsfeed").innerHTML = tweetsHTML;
     });
 }
 
@@ -204,13 +213,7 @@ function logout() {
 }
 
 
-// Function to display user information in the HTML page
-function displayUserInfo(email, firstname, lastname, birthdate) {
-  document.querySelector("#emailInfo").textContent = email;
-  document.querySelector("#firstnameInfo").textContent = firstname;
-  document.querySelector("#lastnameInfo").textContent = lastname;
-  document.querySelector("#birthdateInfo").textContent = birthdate;
-}
+
 
 function updateProfile(event) {
   event.preventDefault();
@@ -219,14 +222,12 @@ function updateProfile(event) {
   const firstname = document.querySelector("#firstname").value;
   const lastname = document.querySelector("#lastname").value;
   const birthdate = document.querySelector("#birthdate").value;
-  const password = document.querySelector("#password").value;
 
   const data = {
     email: email,
     firstname: firstname,
     lastname: lastname,
-    birthdate: birthdate,
-    password: password
+    birthdate: birthdate
   };
 
   fetch(endpoint + "changeprofile.php", {
@@ -239,14 +240,12 @@ function updateProfile(event) {
     .then(response => response.json())
     .then(result => {
       if (result.success) {
-
-        displayUserInfo(email, firstname, lastname, birthdate);
-
+        // Handle successful update
         alert(result.message);
-
+        // Redirect to home page
         window.location.href = "index.html";
       } else {
-
+        // Handle error
         alert(result.message);
       }
     })
@@ -254,23 +253,6 @@ function updateProfile(event) {
       console.error("Error:", error);
     });
 }
-
-
-fetch(endpoint + "getuserinfo.php")
-  .then(response => response.json())
-  .then(result => {
-    if (result.success) {
-      const { email, firstname, lastname, birthdate } = result.data;
-      displayUserInfo(email, firstname, lastname, birthdate);
-
-      document.querySelector("#email").value = email;
-      document.querySelector("#firstname").value = firstname;
-      document.querySelector("#lastname").value = lastname;
-      document.querySelector("#birthdate").value = birthdate;
-    } else {
-      alert(result.message);
-    }
-  })
 
   const changePasswordForm = document.querySelector("#changePasswordForm");
 try {

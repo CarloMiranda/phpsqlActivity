@@ -6,9 +6,9 @@ include "config.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
 
-    $tweet_id = $data['tweet_id'];
+    $user_id = $data['user_id'];
 
-    $sql = "DELETE FROM posts WHERE tweet_id = '$tweet_id'";
+    $sql = "DELETE FROM tweets WHERE user_id = '$user_id'";
 
     if ($conn->query($sql)) {
         $response = array(

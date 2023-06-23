@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $date_tweeted = $data['date_tweeted'];
     $user_id = $data['user_id'];
 
-    $sql = "INSERT INTO posts (content, date_tweeted, user_id) VALUES ('$content', '$date_tweeted', '$user_id')";
+    $sql = "INSERT INTO tweets (content, date_tweeted, user_id) VALUES ('$content', '$date_tweeted', '$user_id')";
 
     if ($conn->query($sql)) {
         $response = array(
