@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $lastname = isset($data['lastname']) ? $data['lastname'] : '';
         $birthdate = isset($data['birthdate']) ? $data['birthdate'] : '';
 
+
          // Update the user profile in the database
         //  $userID = $_COOKIE['user_id'];
         //  $sql = "UPDATE users SET email = '$email', firstname = '$firstname', lastname = '$lastname', birthdate = '$birthdate' WHERE id = '$userID'";

@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Verify the entered password against the stored password
     if (password_verify($password, $storedPassword)) {
-      // Password matches, update the password
+      // Password matches, update the user info
       $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
 
       $updateSql = "UPDATE users SET password = '$newPasswordHash' WHERE id = $userId";
