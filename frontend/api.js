@@ -240,18 +240,12 @@ function updateProfile(event) {
     .then(response => response.json())
     .then(result => {
       if (result.success) {
-        // Handle successful update
         alert(result.message);
-        // Redirect to home page
         window.location.href = "index.html";
       } else {
-        // Handle error
         alert(result.message);
       }
     })
-    .catch(error => {
-      console.error("Error:", error);
-    });
 }
 
   const changePasswordForm = document.querySelector("#changePasswordForm");
